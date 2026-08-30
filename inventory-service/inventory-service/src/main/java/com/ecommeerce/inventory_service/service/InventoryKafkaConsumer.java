@@ -18,5 +18,6 @@ public class InventoryKafkaConsumer {
         System.out.println("MESSAGE RECEIVED FROM KAFKA:");
         System.out.println(message);
         System.out.println("=================================");
+        System.out.println("=================================");
     }
 }
