@@ -1,0 +1,45 @@
+package com.ecommeerce.order_service.kafka;
+
+public class PaymentFailedEvent {
+
+    private Long orderId;
+    private String status;
+    private String reason;
+
+    public PaymentFailedEvent() {
+    }
+
+    public PaymentFailedEvent(
+            Long orderId,
+            String status,
+            String reason) {
+
+        this.orderId = orderId;
+        this.status = status;
+        this.reason = reason;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+}

@@ -1,13 +1,12 @@
-package com.ecommeerce.inventory_service.dto;
+package com.ecommeerce.payment_service.kafka;
 
-public class OrderCreatedEvent {
+public class InventoryReservedEvent {
 
     private Long orderId;
-    private Long userId;
     private Long productId;
     private Integer quantity;
 
-    public OrderCreatedEvent() {
+    public InventoryReservedEvent() {
     }
 
     public Long getOrderId() {
@@ -16,14 +15,6 @@ public class OrderCreatedEvent {
 
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public Long getProductId() {

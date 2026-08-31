@@ -1,4 +1,4 @@
-package com.ecommeerce.order_service.dto;
+package com.ecommeerce.inventory_service.kafka;
 
 public class OrderCreatedEvent {
 
@@ -8,18 +8,6 @@ public class OrderCreatedEvent {
     private Integer quantity;
 
     public OrderCreatedEvent() {
-    }
-
-    public OrderCreatedEvent(
-            Long orderId,
-            Long userId,
-            Long productId,
-            Integer quantity) {
-
-        this.orderId = orderId;
-        this.userId = userId;
-        this.productId = productId;
-        this.quantity = quantity;
     }
 
     public Long getOrderId() {

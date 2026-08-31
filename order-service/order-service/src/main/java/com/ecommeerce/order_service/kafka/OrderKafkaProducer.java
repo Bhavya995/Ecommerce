@@ -1,6 +1,5 @@
-package com.ecommeerce.order_service.service;
+package com.ecommeerce.order_service.kafka;
 
-import com.ecommeerce.order_service.dto.OrderCreatedEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
-package com.ecommeerce.inventory_service.config;
+package com.ecommeerce.payment_service.config;
 
-import com.ecommeerce.inventory_service.kafka.OrderCreatedEvent;
+import com.ecommeerce.payment_service.kafka.InventoryReservedEvent;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -22,7 +22,8 @@ import java.util.Map;
 public class KafkaConsumerConfig {
 
     @Bean
-    public ConsumerFactory<String, OrderCreatedEvent> consumerFactory() {
+    public ConsumerFactory<String, InventoryReservedEvent>
+    consumerFactory() {
 
         Map<String, Object> config = new HashMap<>();
 
@@ -33,7 +34,7 @@ public class KafkaConsumerConfig {
 
         config.put(
                 ConsumerConfig.GROUP_ID_CONFIG,
-                "inventory-test-group"
+                "payment-test-group"
         );
 
         config.put(
@@ -41,53 +42,44 @@ public class KafkaConsumerConfig {
                 "earliest"
         );
 
-        // Key
         config.put(
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 StringDeserializer.class
         );
 
-        // Error handling
         config.put(
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
                 ErrorHandlingDeserializer.class
         );
 
-        // Actual JSON deserializer
         config.put(
                 ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS,
                 JacksonJsonDeserializer.class
         );
 
-        // Tell consumer what class to create
         config.put(
                 JacksonJsonDeserializer.VALUE_DEFAULT_TYPE,
-                OrderCreatedEvent.class.getName()
+                InventoryReservedEvent.class.getName()
         );
 
-        // Trust our Inventory event package
         config.put(
                 JacksonJsonDeserializer.TRUSTED_PACKAGES,
-                "com.ecommeerce.inventory_service.kafka"
+                "com.ecommeerce.payment_service.kafka"
         );
 
-        // IMPORTANT:
-        // Ignore the producer's Java type information
         config.put(
                 JacksonJsonDeserializer.USE_TYPE_INFO_HEADERS,
                 false
         );
 
-        return new DefaultKafkaConsumerFactory<>(
-                config
-        );
+        return new DefaultKafkaConsumerFactory<>(config);
     }
 
     @Bean(name = "kafkaListenerContainerFactory")
-    public ConcurrentKafkaListenerContainerFactory<String, OrderCreatedEvent>
+    public ConcurrentKafkaListenerContainerFactory<String, InventoryReservedEvent>
     kafkaListenerContainerFactory() {
 
-        ConcurrentKafkaListenerContainerFactory<String, OrderCreatedEvent>
+        ConcurrentKafkaListenerContainerFactory<String, InventoryReservedEvent>
                 factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
 

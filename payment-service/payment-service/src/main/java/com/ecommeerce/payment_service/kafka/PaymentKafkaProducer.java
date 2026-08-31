@@ -1,45 +1,45 @@
-package com.ecommeerce.inventory_service.kafka;
+package com.ecommeerce.payment_service.kafka;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InventoryKafkaProducer {
+public class PaymentKafkaProducer {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public InventoryKafkaProducer(
+    public PaymentKafkaProducer(
             KafkaTemplate<String, Object> kafkaTemplate) {
 
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendInventoryReserved(
-            InventoryReservedEvent event) {
+    public void sendPaymentCompleted(
+            PaymentCompletedEvent event) {
 
         kafkaTemplate.send(
-                "inventory-reserved",
+                "payment-completed",
                 event.getOrderId().toString(),
                 event
         );
 
         System.out.println(
-                "InventoryReserved event sent for order: "
+                "PaymentCompleted event sent for order: "
                         + event.getOrderId()
         );
     }
 
-    public void sendInventoryFailed(
-            InventoryFailedEvent event) {
+    public void sendPaymentFailed(
+            PaymentFailedEvent event) {
 
         kafkaTemplate.send(
-                "inventory-failed",
+                "payment-failed",
                 event.getOrderId().toString(),
                 event
         );
 
         System.out.println(
-                "InventoryFailed event sent for order: "
+                "PaymentFailed event sent for order: "
                         + event.getOrderId()
         );
     }

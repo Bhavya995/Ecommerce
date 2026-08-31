@@ -1,8 +1,9 @@
 package com.ecommeerce.order_service.service;
 
-import com.ecommeerce.order_service.dto.OrderCreatedEvent;
+import com.ecommeerce.order_service.kafka.OrderCreatedEvent;
 import com.ecommeerce.order_service.entity.Order;
 import com.ecommeerce.order_service.entity.OrderStatus;
+import com.ecommeerce.order_service.kafka.OrderKafkaProducer;
 import com.ecommeerce.order_service.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -65,5 +66,21 @@ public class OrderService {
         Order existingOrder = getOrderById(id);
 
         orderRepository.delete(existingOrder);
+    }
+    public Order confirmOrder(Long orderId) {
+
+        Order order = getOrderById(orderId);
+
+        order.setStatus(OrderStatus.CONFIRMED);
+
+        return orderRepository.save(order);
+    }
+    public Order cancelOrder(Long orderId) {
+
+        Order order = getOrderById(orderId);
+
+        order.setStatus(OrderStatus.CANCELLED);
+
+        return orderRepository.save(order);
     }
 }
