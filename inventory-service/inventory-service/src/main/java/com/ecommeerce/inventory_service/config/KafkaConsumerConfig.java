@@ -1,5 +1,6 @@
 package com.ecommeerce.inventory_service.config;
 
+import com.ecommeerce.inventory_service.kafka.InventoryReleaseEvent;
 import com.ecommeerce.inventory_service.kafka.OrderCreatedEvent;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -92,6 +93,79 @@ public class KafkaConsumerConfig {
                 new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setConsumerFactory(consumerFactory());
+
+        return factory;
+    }
+    @Bean
+    public ConsumerFactory<String, InventoryReleaseEvent>
+    inventoryReleaseConsumerFactory() {
+
+        Map<String, Object> config = new HashMap<>();
+
+        config.put(
+                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+                "localhost:9092"
+        );
+
+        config.put(
+                ConsumerConfig.GROUP_ID_CONFIG,
+                "inventory-release-test-group"
+        );
+
+        config.put(
+                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
+                "earliest"
+        );
+
+        config.put(
+                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+                StringDeserializer.class
+        );
+
+        config.put(
+                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+                ErrorHandlingDeserializer.class
+        );
+
+        config.put(
+                ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS,
+                JacksonJsonDeserializer.class
+        );
+
+        config.put(
+                JacksonJsonDeserializer.VALUE_DEFAULT_TYPE,
+                InventoryReleaseEvent.class.getName()
+        );
+
+        config.put(
+                JacksonJsonDeserializer.TRUSTED_PACKAGES,
+                "com.ecommeerce.inventory_service.kafka"
+        );
+
+        config.put(
+                JacksonJsonDeserializer.USE_TYPE_INFO_HEADERS,
+                false
+        );
+
+        return new DefaultKafkaConsumerFactory<>(
+                config
+        );
+    }
+    @Bean(name = "inventoryReleaseKafkaListenerContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<
+            String,
+            InventoryReleaseEvent
+            > inventoryReleaseKafkaListenerContainerFactory() {
+
+        ConcurrentKafkaListenerContainerFactory<
+                String,
+                InventoryReleaseEvent
+                > factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+
+        factory.setConsumerFactory(
+                inventoryReleaseConsumerFactory()
+        );
 
         return factory;
     }

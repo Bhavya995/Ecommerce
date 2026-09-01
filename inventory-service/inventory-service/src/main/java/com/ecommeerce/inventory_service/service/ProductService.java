@@ -46,4 +46,89 @@ public class ProductService {
 
         productRepository.delete(existingProduct);
     }
+    public boolean reserveStock(Long productId, Integer requestedQuantity) {
+
+        Product product = getProductById(productId);
+
+        System.out.println("=================================");
+        System.out.println("CHECKING REAL DATABASE STOCK");
+        System.out.println("=================================");
+
+        System.out.println(
+                "Product ID: " + productId
+        );
+
+        System.out.println(
+                "Available Stock: " + product.getQuantity()
+        );
+
+        System.out.println(
+                "Requested Quantity: " + requestedQuantity
+        );
+
+        // Check stock
+        if (product.getQuantity() < requestedQuantity) {
+
+            System.out.println(
+                    "❌ INSUFFICIENT STOCK"
+            );
+
+            return false;
+        }
+
+        // Reserve stock
+        product.setQuantity(
+                product.getQuantity() - requestedQuantity
+        );
+
+        productRepository.save(product);
+
+        System.out.println(
+                "✅ STOCK RESERVED"
+        );
+
+        System.out.println(
+                "Remaining Stock: " + product.getQuantity()
+        );
+
+        return true;
+    }
+    public boolean releaseStock(
+            Long productId,
+            Integer quantity) {
+
+        Product product = getProductById(productId);
+
+        System.out.println("=================================");
+        System.out.println("RELEASING INVENTORY");
+        System.out.println("=================================");
+
+        System.out.println(
+                "Product ID: " + productId
+        );
+
+        System.out.println(
+                "Current Stock: " + product.getQuantity()
+        );
+
+        System.out.println(
+                "Release Quantity: " + quantity
+        );
+
+        product.setQuantity(
+                product.getQuantity() + quantity
+        );
+
+        productRepository.save(product);
+
+        System.out.println(
+                "✅ INVENTORY RELEASED"
+        );
+
+        System.out.println(
+                "New Stock: " + product.getQuantity()
+        );
+
+        return true;
+    }
 }

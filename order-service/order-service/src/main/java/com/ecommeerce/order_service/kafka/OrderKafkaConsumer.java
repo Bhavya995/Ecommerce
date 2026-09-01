@@ -1,5 +1,6 @@
 package com.ecommeerce.order_service.kafka;
 
+import com.ecommeerce.order_service.entity.Order;
 import com.ecommeerce.order_service.service.OrderService;
 
 import org.springframework.kafka.annotation.KafkaListener;
@@ -9,11 +10,16 @@ import org.springframework.stereotype.Service;
 public class OrderKafkaConsumer {
 
     private final OrderService orderService;
+    private final InventoryReleaseKafkaProducer
+            inventoryReleaseKafkaProducer;
 
     public OrderKafkaConsumer(
-            OrderService orderService) {
+            OrderService orderService,
+            InventoryReleaseKafkaProducer inventoryReleaseKafkaProducer) {
 
         this.orderService = orderService;
+        this.inventoryReleaseKafkaProducer =
+                inventoryReleaseKafkaProducer;
     }
 
     @KafkaListener(
@@ -64,8 +70,23 @@ public class OrderKafkaConsumer {
                 "Reason: " + event.getReason()
         );
 
-        orderService.cancelOrder(
-                event.getOrderId()
+        // 1. Cancel order
+        Order order =
+                orderService.cancelOrder(
+                        event.getOrderId()
+                );
+
+        // 2. Create compensation event
+        InventoryReleaseEvent releaseEvent =
+                new InventoryReleaseEvent(
+                        order.getId(),
+                        order.getProductId(),
+                        order.getQuantity()
+                );
+
+        // 3. Send compensation event
+        inventoryReleaseKafkaProducer.sendInventoryRelease(
+                releaseEvent
         );
     }
 }
